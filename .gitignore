@@ -21,27 +21,6 @@ env/
 .DS_Store
 Thumbs.db
 
-# raw confidential datasets
-data/raw/*
-!data/raw/.gitkeep
-
-# processed confidential outputs
-data/clean/*
-!data/clean/.gitkeep
-
-# confidential scripts
-private/*
-
-# accidental uploads
-*.csv
-*.xlsx
-*.xls
-*.parquet
-*.feather
-
-# allow synthetic demo data
-!data/synthetic/*.csv
-
 # secrets
 .env
 .env.*
