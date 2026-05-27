@@ -21,6 +21,10 @@ env/
 .DS_Store
 Thumbs.db
 
+# raw dataset
+data/raw/*
+!data/raw/.gitkeep
+
 # secrets
 .env
 .env.*
