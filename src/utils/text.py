@@ -25,3 +25,10 @@ def to_snake_case(text: str) -> str:
     text = re.sub(r"[^a-z0-9]+", "_", text)
 
     return text.strip("_")
+
+
+def to_title_case(text: str) -> str:
+    text = str(text).replace("_", " ").strip()
+    words = re.split(r"\s+", text)
+
+    return " ".join(word.capitalize() for word in words)
