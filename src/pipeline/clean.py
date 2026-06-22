@@ -34,7 +34,7 @@ def convert_to_datetime(df: pd.DataFrame) -> pd.DataFrame:
 def normalize_text_columns(df: pd.DataFrame) -> pd.DataFrame:
     """Normalize text columns in the dataframe using the provided normalization function."""
 
-    text_cols = df.select_dtypes(include=["object"]).columns
+    text_cols = df.select_dtypes(include=["object"]).columns.tolist()
 
     df = df.copy()
 
