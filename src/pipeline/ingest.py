@@ -2,10 +2,17 @@
 
 from pathlib import Path
 
-from src.utils.io import read_csv_safe
+import pandas as pd
     
 from src.config.constants import RAW_DATA_DIR
 
 def load_dataset():
     path = Path(RAW_DATA_DIR) / "ntrarogyaseva.csv"
-    return read_csv_safe(path)
+    try:
+        if not path.exists():
+            print(f"File not found: {path}")
+            return None
+        return pd.read_csv(path, index_col=[0])
+    except Exception as e:
+        print(f"Error reading CSV file: {e}")
+        return None
