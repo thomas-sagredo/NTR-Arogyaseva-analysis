@@ -17,6 +17,12 @@ library(car)
 library(pROC)
 
 # ==========================================================
+# 0.5. SET DIRECTORIO DEL TP
+# ==========================================================
+
+setwd("C:/Github/NTR-Arogyaseva-analysis")
+
+# ==========================================================
 # 1. FUNCIÓN PARA ICC LOGÍSTICO MULTINIVEL
 # ==========================================================
 
@@ -46,7 +52,7 @@ calcular_icc_logistico <- function(modelo) {
 # ==========================================================
 
 datos <- read_parquet(
-  "~/UNAB/taller big data y salud/pacientes/ntrarogyaseva.parquet"
+  "C:/Github/NTR-Arogyaseva-analysis/data/clean/ntrarogyaseva.parquet"
 ) %>%
   clean_names() %>%
   rename(
@@ -111,7 +117,7 @@ datos <- datos %>%
     
     edad = ifelse(edad < 0 | edad > 120, NA, edad),
     dias_internacion = ifelse(dias_internacion < 0, NA, dias_internacion),
-    dias_reclamo_cirugia = ifelse(dias_reclamo_cirugia < 0, NA, dias_reclamo_cirugia),
+#    dias_reclamo_cirugia = ifelse(dias_reclamo_cirugia < 0, NA, dias_reclamo_cirugia),
     ratio_montos = ifelse(is.infinite(ratio_montos), NA, ratio_montos),
     
     log_monto_reclamado = log1p(monto_reclamado),
@@ -425,7 +431,7 @@ car::vif(glm_referencia)
 
 glmm_nulo_hospital <- glmer(
   mortalidad_binaria ~ 1 + (1 | nombre_hospital),
-  data = datos_modelo_hosp_estables,
+  data = datos_modelo,
   family = binomial(),
   control = glmerControl(optimizer = "bobyqa")
 )
@@ -447,7 +453,7 @@ icc_nulo_hospital$ICC_total_pct
 
 glmm_nulo_distrito_hospital <- glmer(
   mortalidad_binaria ~ 1 + (1 | distrito_hospital / nombre_hospital),
-  data = datos_modelo_hosp_estables,
+  data = datos_modelo,
   family = binomial(),
   control = glmerControl(optimizer = "bobyqa")
 )
@@ -538,12 +544,16 @@ glmm_demografico <- glmer(
     edad_z +
     sexo +
     (1 | nombre_hospital),
-  data = datos_modelo_hosp_estables,
+  data = datos_modelo,
   family = binomial(),
   control = glmerControl(optimizer = "bobyqa")
 )
 
 icc_demografico <- calcular_icc_logistico(glmm_demografico)
+
+icc_demografico$varianzas
+icc_demografico$ICC_total_pct
+
 
 # ----------------------------------------------------------
 # 10.2 Modelo clínico del paciente
@@ -555,12 +565,15 @@ glmm_paciente_clinico <- glmer(
     sexo +
     nombre_categoria_modelo +
     (1 | nombre_hospital),
-  data = datos_modelo_hosp_estables,
+  data = datos_modelo,
   family = binomial(),
   control = glmerControl(optimizer = "bobyqa")
 )
 
 icc_paciente_clinico <- calcular_icc_logistico(glmm_paciente_clinico)
+
+icc_paciente_clinico$varianzas
+icc_paciente_clinico$ICC_total_pct
 
 # ----------------------------------------------------------
 # 10.3 Modelo paciente completo principal
@@ -573,7 +586,7 @@ glmm_paciente_principal <- glmer(
     nombre_categoria_modelo +
     log_monto_reclamado_z +
     (1 | nombre_hospital),
-  data = datos_modelo_hosp_estables,
+  data = datos_modelo,
   family = binomial(),
   control = glmerControl(
     optimizer = "bobyqa",
@@ -604,7 +617,7 @@ glmm_contextual_hospital <- glmer(
     log_monto_reclamado_z +
     tipo_hospital +
     (1 | nombre_hospital),
-  data = datos_modelo_hosp_estables,
+  data = datos_modelo,
   family = binomial(),
   control = glmerControl(
     optimizer = "bobyqa",
@@ -636,7 +649,7 @@ glmm_sensibilidad_casta <- glmer(
     log_monto_reclamado_z +
     tipo_hospital +
     (1 | nombre_hospital),
-  data = datos_modelo_hosp_estables,
+  data = datos_modelo,
   family = binomial(),
   control = glmerControl(
     optimizer = "bobyqa",
@@ -736,6 +749,30 @@ anova(
 # - coherencia epidemiológica,
 # - estabilidad del modelo.
 
+# ==========================================================
+# 11.5. COMPARACIÓN DE MODELOS POSTERIORES
+# ==========================================================
+
+glmm_paciente_clinico_nuevo <- glmer(
+  mortalidad_binaria ~
+    edad_z +
+    sexo +
+    (1 | nombre_categoria_modelo) +
+    (1 | nombre_hospital),
+  data = datos_modelo,
+  family = binomial(),
+  control = glmerControl(optimizer = "bobyqa")
+)
+
+icc_paciente_clinico_nuevo <- calcular_icc_logistico(glmm_paciente_clinico_nuevo)
+
+icc_paciente_clinico_nuevo$varianzas
+icc_paciente_clinico_nuevo$ICC_total_pct
+
+anova(
+  glmm_paciente_clinico,
+  glmm_paciente_clinico_nuevo
+)
 
 # ==========================================================
 # INTERPRETACIÓN DE LOS MODELOS MULTINIVEL EXPLICATIVOS
