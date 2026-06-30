@@ -1,0 +1,107 @@
+
+Call:
+glm(formula = mortality ~ age_z + sex + category_name + log_claim_amount_z + 
+    hosp_type, family = binomial(), data = datos_modelo)
+
+Coefficients:
+                          Estimate Std. Error z value Pr(>|z|)    
+(Intercept)               -2.78611    0.05585 -49.882  < 2e-16 ***
+age_z                      0.24222    0.03344   7.243 4.38e-13 ***
+sexFemenino               -0.23845    0.05422  -4.398 1.09e-05 ***
+category_nameneurosurgery  0.50596    0.08073   6.268 3.66e-10 ***
+log_claim_amount_z        -0.60071    0.06266  -9.587  < 2e-16 ***
+hosp_typePúblico           0.32145    0.05517   5.826 5.67e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 12093  on 24077  degrees of freedom
+Residual deviance: 11810  on 24072  degrees of freedom
+AIC: 11822
+
+Number of Fisher Scoring iterations: 5
+
+                                  OR      2.5 %    97.5 %
+(Intercept)               0.06166032 0.05526661 0.0687937
+age_z                     1.27407869 1.19324867 1.3603841
+sexFemenino               0.78785007 0.70841915 0.8761871
+category_nameneurosurgery 1.65857456 1.41586443 1.9428905
+log_claim_amount_z        0.54842038 0.48504301 0.6200789
+hosp_typePúblico          1.37911998 1.23777082 1.5366107
+             age_z                sex      category_name log_claim_amount_z 
+          1.176363           1.002481           2.359036           2.401793 
+         hosp_type 
+          1.127039 
+Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: mortality ~ 1 + (1 | hosp_name)
+   Data: datos_modelo
+Control: glmerControl(optimizer = "bobyqa")
+
+      AIC       BIC    logLik -2*log(L)  df.resid 
+  11394.7   11410.9   -5695.4   11390.7     24076 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-0.4533 -0.3303 -0.2081 -0.1479 11.6633 
+
+Random effects:
+ Groups    Name        Variance Std.Dev.
+ hosp_name (Intercept) 1.041    1.02    
+Number of obs: 24078, groups:  hosp_name, 105
+
+Fixed effects:
+            Estimate Std. Error z value Pr(>|z|)    
+(Intercept)   -3.599      0.128  -28.11   <2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+        grp     vcov
+1 hosp_name 1.040748
+[1] 24.03234
+        grp      vcov
+1 hosp_name 0.9765764
+[1] 22.8897
+        grp    vcov
+1 hosp_name 1.04496
+[1] 24.10614
+        grp      vcov
+1 hosp_name 0.9952925
+[1] 23.22649
+        grp      vcov
+1 hosp_name 0.9682349
+[1] 22.73864
+        grp      vcov
+1 hosp_name 0.9718657
+[1] 22.80447
+# A tibble: 6 × 7
+  modelo         objeto    AIC    BIC varianza_hospital ICC_pct PCV_hospital_pct
+  <chr>          <chr>   <dbl>  <dbl>             <dbl>   <dbl>            <dbl>
+1 Nulo hospital  glmm_… 11395. 11411.             1.04     24.0            0    
+2 Demográfico    glmm_… 11326. 11358.             0.977    22.9            6.17 
+3 Paciente clín… glmm_… 11320. 11360.             1.04     24.1           -0.405
+4 Paciente prin… glmm_… 11269. 11317.             0.995    23.2            4.37 
+5 Paciente + ti… glmm_… 11269. 11325.             0.968    22.7            6.97 
+6 Sensibilidad … glmm_… 11274. 11371.             0.972    22.8            6.62 
+Data: datos_modelo
+Models:
+glmm_nulo_hospital: mortality ~ 1 + (1 | hosp_name)
+glmm_demografico: mortality ~ age_z + sex + (1 | hosp_name)
+glmm_paciente_clinico: mortality ~ age_z + sex + category_name + (1 | hosp_name)
+glmm_paciente_principal: mortality ~ age_z + sex + category_name + log_claim_amount_z + (1 | hosp_name)
+glmm_contextual_hospital: mortality ~ age_z + sex + category_name + log_claim_amount_z + hosp_type + (1 | hosp_name)
+                         npar   AIC   BIC  logLik -2*log(L)   Chisq Df
+glmm_nulo_hospital          2 11395 11411 -5695.4     11391           
+glmm_demografico            4 11326 11358 -5659.0     11318 72.7565  2
+glmm_paciente_clinico       5 11320 11360 -5654.9     11310  8.0706  1
+glmm_paciente_principal     6 11269 11318 -5628.5     11257 52.9490  1
+glmm_contextual_hospital    7 11269 11325 -5627.3     11255  2.3560  1
+                         Pr(>Chisq)    
+glmm_nulo_hospital                     
+glmm_demografico          < 2.2e-16 ***
+glmm_paciente_clinico      0.004499 ** 
+glmm_paciente_principal   3.423e-13 ***
+glmm_contextual_hospital   0.124803    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
