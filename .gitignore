@@ -38,3 +38,6 @@ data/raw/*
 
 # private figures
 figures/private/*
+
+# private files
+papers/*
