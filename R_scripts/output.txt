@@ -1,0 +1,430 @@
+# A tibble: 14 × 5
+   distrito_hospital pacientes hospitales muertes mortalidad_pct
+   <fct>                 <int>      <int>   <dbl>          <dbl>
+ 1 kurnool               21886          6     941           4.30
+ 2 nellore               37337         10    1379           3.69
+ 3 west godavari         18878          5     672           3.56
+ 4 vishakhapatnam        35624         14    1211           3.40
+ 5 chittoor              35465          7    1146           3.23
+ 6 vizianagaram           9454          5     274           2.90
+ 7 guntur                44764         14    1185           2.65
+ 8 prakasam              12520          9     329           2.63
+ 9 krishna               31364         17     751           2.39
+10 anantapur             11398          6     258           2.26
+11 srikakulam            12909          5     291           2.25
+12 ysr kadapa             5630          2     119           2.11
+13 east godavari         40584         11     845           2.08
+14 hyderabad             22923          9     350           1.53
+NULL
+                                                  2.5 %      97.5 %
+(Intercept)                                -2.823226155 -2.67565381
+edad_z                                      0.227011477  0.28446410
+sexoFemenino                                0.001163952  0.09080525
+nombre_categoria_modelocardiology          -0.450727818 -0.25026637
+nombre_categoria_modelocritical care        2.105229342  2.34605577
+nombre_categoria_modelogastroenterology    -0.841822016 -0.46812663
+nombre_categoria_modelogeneral medicine    -0.228252556  0.24325631
+nombre_categoria_modelogeneral surgery     -1.512932171 -1.20142593
+nombre_categoria_modelomedical oncology    -5.046562011 -4.67386615
+nombre_categoria_modelonephrology          -1.106317146 -0.92991572
+nombre_categoria_modeloneurology           -0.167168128  0.02875217
+nombre_categoria_modeloneurosurgery         0.741187153  0.95751415
+nombre_categoria_modeloOther               -3.640487281 -3.16675207
+nombre_categoria_modelopediatric surgeries -0.394191682  0.06543167
+nombre_categoria_modelopediatrics          -0.135068113  0.12992806
+nombre_categoria_modeloplastic surgery      1.124377611  1.48588421
+nombre_categoria_modelopoly trauma         -1.524363127 -1.28266132
+nombre_categoria_modelopulmonology          0.740002408  0.96668590
+nombre_categoria_modeloradiation oncology  -2.841042722 -2.47699055
+nombre_categoria_modelosurgical oncology   -1.539532800 -1.09191916
+log_monto_reclamado_z                      -0.969242426 -0.90562966
+tipo_hospitalPúblico                        0.119372681  0.21252643
+                            GVIF Df GVIF^(1/(2*Df))
+edad_z                  2.119489  1        1.455846
+sexo                    1.060876  1        1.029988
+nombre_categoria_modelo 4.776926 17        1.047068
+log_monto_reclamado_z   1.931577  1        1.389812
+tipo_hospital           1.211444  1        1.100656
+Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: mortalidad_binaria ~ 1 + (1 | nombre_hospital)
+   Data: datos_modelo
+Control: glmerControl(optimizer = "bobyqa")
+
+      AIC       BIC    logLik -2*log(L)  df.resid 
+  89387.1   89409.3  -44691.5   89383.1    479686 
+
+Scaled residuals: 
+   Min     1Q Median     3Q    Max 
+-0.447 -0.182 -0.120 -0.049 37.304 
+
+Random effects:
+ Groups          Name        Variance Std.Dev.
+ nombre_hospital (Intercept) 3.319    1.822   
+Number of obs: 479688, groups:  nombre_hospital, 465
+
+Fixed effects:
+            Estimate Std. Error z value Pr(>|z|)    
+(Intercept)  -5.4911     0.1041  -52.77   <2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+function (x) 
+{
+    if (is.factor(x)) 
+        x
+    else if (!is.object(x) && is.integer(x)) {
+        levels <- sort.int(unique.default(x))
+        f <- match(x, levels)
+        levels(f) <- as.character(levels)
+        if (!is.null(nx <- names(x))) 
+            names(f) <- nx
+        class(f) <- "factor"
+        f
+    }
+    else factor(x)
+}
+<bytecode: 0x000001a98ae8a5a8>
+<environment: namespace:base>
+              grp     vcov
+1 nombre_hospital 3.318944
+[1] 50.21998
+Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: mortalidad_binaria ~ 1 + (1 | distrito_hospital/nombre_hospital)
+   Data: datos_modelo
+Control: glmerControl(optimizer = "bobyqa")
+
+      AIC       BIC    logLik -2*log(L)  df.resid 
+  89380.7   89413.9  -44687.3   89374.7    479685 
+
+Scaled residuals: 
+   Min     1Q Median     3Q    Max 
+-0.440 -0.182 -0.120 -0.049 37.194 
+
+Random effects:
+ Groups                            Name        Variance  Std.Dev. 
+ nombre_hospital:distrito_hospital (Intercept) 3.199e+00 1.7884411
+ distrito_hospital                 (Intercept) 2.789e-10 0.0000167
+Number of obs: 479688, groups:  
+nombre_hospital:distrito_hospital, 467; distrito_hospital, 20
+
+Fixed effects:
+            Estimate Std. Error z value Pr(>|z|)    
+(Intercept)  -5.4436     0.1021  -53.32   <2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Data: datos_modelo
+Models:
+glmm_nulo_hospital: mortalidad_binaria ~ 1 + (1 | nombre_hospital)
+glmm_nulo_distrito_hospital: mortalidad_binaria ~ 1 + (1 | distrito_hospital/nombre_hospital)
+                            npar   AIC   BIC logLik -2*log(L)  Chisq Df
+glmm_nulo_hospital             2 89387 89409 -44692     89383          
+glmm_nulo_distrito_hospital    3 89381 89414 -44687     89375 8.4263  1
+                            Pr(>Chisq)   
+glmm_nulo_hospital                       
+glmm_nulo_distrito_hospital   0.003698 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+                            df      BIC
+glmm_nulo_hospital           2 89409.26
+glmm_nulo_distrito_hospital  3 89413.91
+              grp     vcov
+1 nombre_hospital 3.247448
+mortalidad_binaria ~ edad_z + sexo + nombre_categoria_modelo + 
+    summary(glmm_paciente_principal)
+Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: mortalidad_binaria ~ edad_z + sexo + nombre_categoria_modelo +  
+    log_monto_reclamado_z + (1 | nombre_hospital)
+   Data: datos_modelo
+Control: glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 2e+05))
+
+      AIC       BIC    logLik -2*log(L)  df.resid 
+  79180.5   79424.2  -39568.2   79136.5    479666 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-41.841  -0.158  -0.076  -0.035 197.821 
+
+Random effects:
+ Groups          Name        Variance Std.Dev.
+ nombre_hospital (Intercept) 1.318    1.148   
+Number of obs: 479688, groups:  nombre_hospital, 465
+
+Fixed effects:
+                                           Estimate Std. Error z value Pr(>|z|)
+(Intercept)                                -3.75610    0.08248 -45.539  < 2e-16
+edad_z                                      0.30114    0.01455  20.699  < 2e-16
+sexoFemenino                                0.03810    0.02260   1.686  0.09185
+nombre_categoria_modelocardiology          -0.29532    0.05248  -5.627 1.83e-08
+nombre_categoria_modelocritical care        2.34422    0.07142  32.824  < 2e-16
+nombre_categoria_modelogastroenterology    -0.73434    0.09780  -7.508 5.99e-14
+nombre_categoria_modelogeneral medicine    -0.10162    0.12338  -0.824  0.41015
+nombre_categoria_modelogeneral surgery     -1.33526    0.08044 -16.599  < 2e-16
+nombre_categoria_modelomedical oncology    -4.74733    0.10663 -44.523  < 2e-16
+nombre_categoria_modelonephrology          -0.93464    0.05000 -18.694  < 2e-16
+nombre_categoria_modeloneurology           -0.16355    0.05596  -2.923  0.00347
+nombre_categoria_modeloneurosurgery         0.75001    0.05777  12.983  < 2e-16
+nombre_categoria_modeloOther               -3.58734    0.12039 -29.798  < 2e-16
+nombre_categoria_modelopediatric surgeries -0.38286    0.13604  -2.814  0.00489
+nombre_categoria_modelopediatrics           0.12970    0.07478   1.734  0.08283
+nombre_categoria_modeloplastic surgery      1.34720    0.09510  14.166  < 2e-16
+nombre_categoria_modelopoly trauma         -1.52765    0.06546 -23.338  < 2e-16
+nombre_categoria_modelopulmonology          0.97546    0.06448  15.128  < 2e-16
+nombre_categoria_modeloradiation oncology  -2.49933    0.10808 -23.125  < 2e-16
+nombre_categoria_modelosurgical oncology   -1.22895    0.11936 -10.296  < 2e-16
+log_monto_reclamado_z                      -0.95300    0.01622 -58.754  < 2e-16
+                                              
+(Intercept)                                ***
+edad_z                                     ***
+sexoFemenino                               .  
+nombre_categoria_modelocardiology          ***
+nombre_categoria_modelocritical care       ***
+nombre_categoria_modelogastroenterology    ***
+nombre_categoria_modelogeneral medicine       
+nombre_categoria_modelogeneral surgery     ***
+nombre_categoria_modelomedical oncology    ***
+nombre_categoria_modelonephrology          ***
+nombre_categoria_modeloneurology           ** 
+nombre_categoria_modeloneurosurgery        ***
+nombre_categoria_modeloOther               ***
+nombre_categoria_modelopediatric surgeries ** 
+nombre_categoria_modelopediatrics          .  
+nombre_categoria_modeloplastic surgery     ***
+nombre_categoria_modelopoly trauma         ***
+nombre_categoria_modelopulmonology         ***
+nombre_categoria_modeloradiation oncology  ***
+nombre_categoria_modelosurgical oncology   ***
+log_monto_reclamado_z                      ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+                                                  2.5 %      97.5 %
+(Intercept)                                -3.917757899 -3.59444020
+edad_z                                      0.272622964  0.32965243
+sexoFemenino                               -0.006197812  0.08239296
+nombre_categoria_modelocardiology          -0.398175817 -0.19246522
+nombre_categoria_modelocritical care        2.204240209  2.48419392
+nombre_categoria_modelogastroenterology    -0.926025504 -0.54264482
+nombre_categoria_modelogeneral medicine    -0.343428510  0.14019703
+nombre_categoria_modelogeneral surgery     -1.492930099 -1.17759536
+nombre_categoria_modelomedical oncology    -4.956317484 -4.53835099
+nombre_categoria_modelonephrology          -1.032625979 -0.83664654
+nombre_categoria_modeloneurology           -0.273233777 -0.05387595
+nombre_categoria_modeloneurosurgery         0.636782268  0.86323338
+nombre_categoria_modeloOther               -3.823298749 -3.35138862
+nombre_categoria_modelopediatric surgeries -0.649502532 -0.11622382
+nombre_categoria_modelopediatrics          -0.016861753  0.27626922
+nombre_categoria_modeloplastic surgery      1.160813394  1.53359446
+nombre_categoria_modelopoly trauma         -1.655940024 -1.39935162
+nombre_categoria_modelopulmonology          0.849081214  1.10183389
+nombre_categoria_modeloradiation oncology  -2.711162475 -2.28750329
+nombre_categoria_modelosurgical oncology   -1.462900918 -0.99500568
+log_monto_reclamado_z                      -0.984790346 -0.92120798
+                                                  2.5 %      97.5 %
+(Intercept)                                -3.917757899 -3.59444020
+edad_z                                      0.272622964  0.32965243
+sexoFemenino                               -0.006197812  0.08239296
+nombre_categoria_modelocardiology          -0.398175817 -0.19246522
+nombre_categoria_modelocritical care        2.204240209  2.48419392
+nombre_categoria_modelogastroenterology    -0.926025504 -0.54264482
+nombre_categoria_modelogeneral medicine    -0.343428510  0.14019703
+nombre_categoria_modelogeneral surgery     -1.492930099 -1.17759536
+nombre_categoria_modelomedical oncology    -4.956317484 -4.53835099
+nombre_categoria_modelonephrology          -1.032625979 -0.83664654
+nombre_categoria_modeloneurology           -0.273233777 -0.05387595
+nombre_categoria_modeloneurosurgery         0.636782268  0.86323338
+nombre_categoria_modeloOther               -3.823298749 -3.35138862
+nombre_categoria_modelopediatric surgeries -0.649502532 -0.11622382
+nombre_categoria_modelopediatrics          -0.016861753  0.27626922
+nombre_categoria_modeloplastic surgery      1.160813394  1.53359446
+nombre_categoria_modelopoly trauma         -1.655940024 -1.39935162
+nombre_categoria_modelopulmonology          0.849081214  1.10183389
+nombre_categoria_modeloradiation oncology  -2.711162475 -2.28750329
+nombre_categoria_modelosurgical oncology   -1.462900918 -0.99500568
+log_monto_reclamado_z                      -0.984790346 -0.92120798
+                                                     OR       2.5 %      97.5 %
+(Intercept)                                 0.023315456 0.019639962  0.02767880
+edad_z                                      1.351397761 1.313406250  1.39048821
+sexoFemenino                                1.038830941 0.993819791  1.08588069
+nombre_categoria_modelocardiology           0.744267212 0.671520930  0.82489414
+nombre_categoria_modelocritical care       10.423972031 9.062344556 11.99018557
+nombre_categoria_modelogastroenterology     0.479757610 0.396065379  0.58113477
+nombre_categoria_modelogeneral medicine     0.903217550 0.709199818  1.15031324
+nombre_categoria_modelogeneral surgery      0.263008560 0.224629594  0.30794474
+nombre_categoria_modelomedical oncology     0.008675475 0.007039385  0.01069182
+nombre_categoria_modelonephrology           0.392694716 0.356037961  0.43312556
+nombre_categoria_modeloneurology            0.848980737 0.760764286  0.94742656
+nombre_categoria_modeloneurosurgery         2.116776093 1.890157666  2.37056469
+nombre_categoria_modeloOther                0.027670707 0.021853868  0.03503581
+nombre_categoria_modelopediatric surgeries  0.681888464 0.522294795  0.89024796
+nombre_categoria_modelopediatrics           1.138216405 0.983002716  1.31793795
+nombre_categoria_modeloplastic surgery      3.845782983 3.191726638  4.63387014
+nombre_categoria_modelopoly trauma          0.217046973 0.190910853  0.24676119
+nombre_categoria_modelopulmonology          2.651895561 2.336991185  3.00923260
+nombre_categoria_modeloradiation oncology   0.082144739 0.066463878  0.10152519
+nombre_categoria_modelosurgical oncology    0.292585941 0.231554504  0.36970360
+log_monto_reclamado_z                       0.385593782 0.373526564  0.39805084
+tipo_hospitalPúblico                        1.019601547 0.688111269  1.51078374
+                                                  2.5 %      97.5 %
+(Intercept)                                -3.930188922 -3.58708867
+edad_z                                      0.272623953  0.32965492
+sexoFemenino                               -0.006199386  0.08239136
+nombre_categoria_modelocardiology          -0.398210095 -0.19250021
+nombre_categoria_modelocritical care        2.204127868  2.48408845
+nombre_categoria_modelogastroenterology    -0.926175982 -0.54277258
+nombre_categoria_modelogeneral medicine    -0.343617961  0.14003429
+nombre_categoria_modelogeneral surgery     -1.493302483 -1.17783492
+nombre_categoria_modelomedical oncology    -4.956234500 -4.53827600
+nombre_categoria_modelonephrology          -1.032717921 -0.83672762
+nombre_categoria_modeloneurology           -0.273431711 -0.05400585
+nombre_categoria_modeloneurosurgery         0.636660247  0.86312819
+nombre_categoria_modeloOther               -3.823377365 -3.35138454
+nombre_categoria_modelopediatric surgeries -0.649523109 -0.11625524
+nombre_categoria_modelopediatrics          -0.017143396  0.27606836
+nombre_categoria_modeloplastic surgery      1.160562036  1.53339240
+nombre_categoria_modelopoly trauma         -1.655948696 -1.39933427
+nombre_categoria_modelopulmonology          0.848864283  1.10168510
+nombre_categoria_modeloradiation oncology  -2.711096672 -2.28744830
+nombre_categoria_modelosurgical oncology   -1.462939995 -0.99505369
+log_monto_reclamado_z                      -0.984766154 -0.92117553
+tipo_hospitalPúblico                       -0.373804727  0.41262855
+# A tibble: 6 × 7
+  modelo         objeto    AIC    BIC varianza_hospital ICC_pct PCV_hospital_pct
+  <chr>          <chr>   <dbl>  <dbl>             <dbl>   <dbl>            <dbl>
+1 Nulo hospital  glmm_… 89387. 89409.              3.32    50.2             0   
+2 Demográfico    glmm_… 88898. 88942.              3.25    49.7             2.15
+3 Paciente clín… glmm_… 82427. 82659.              1.26    27.7            62.1 
+4 Paciente prin… glmm_… 79180. 79424.              1.32    28.6            60.3 
+5 Paciente + ti… glmm_… 79182. 79437.              1.32    28.6            60.3 
+6 Sensibilidad … glmm_… 79187. 79498.              1.32    28.6            60.3 
+Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: mortalidad_binaria ~ edad_z + sexo + nombre_categoria_modelo +  
+    log_monto_reclamado_z + tipo_hospital + (1 | nombre_hospital)
+   Data: datos_modelo
+      AIC       BIC    logLik -2*log(L)  df.resid 
+ 79182.45  79437.31 -39568.23  79136.45    479665 
+Random effects:
+ Groups          Name        Std.Dev.
+ nombre_hospital (Intercept) 1.148   
+Number of obs: 479688, groups:  nombre_hospital, 465
+Fixed Effects:
+                               (Intercept)  
+                                  -3.75864  
+                                    edad_z  
+                                   0.30114  
+                              sexoFemenino  
+                                   0.03810  
+         nombre_categoria_modelocardiology  
+                                  -0.29536  
+      nombre_categoria_modelocritical care  
+                                   2.34411  
+   nombre_categoria_modelogastroenterology  
+                                  -0.73447  
+   nombre_categoria_modelogeneral medicine  
+                                  -0.10179  
+    nombre_categoria_modelogeneral surgery  
+                                  -1.33557  
+   nombre_categoria_modelomedical oncology  
+                                  -4.74726  
+         nombre_categoria_modelonephrology  
+                                  -0.93472  
+          nombre_categoria_modeloneurology  
+                                  -0.16372  
+       nombre_categoria_modeloneurosurgery  
+                                   0.74989  
+              nombre_categoria_modeloOther  
+                                  -3.58738  
+nombre_categoria_modelopediatric surgeries  
+                                  -0.38289  
+         nombre_categoria_modelopediatrics  
+                                   0.12946  
+    nombre_categoria_modeloplastic surgery  
+                                   1.34698  
+        nombre_categoria_modelopoly trauma  
+                                  -1.52764  
+        nombre_categoria_modelopulmonology  
+                                   0.97527  
+ nombre_categoria_modeloradiation oncology  
+                                  -2.49927  
+  nombre_categoria_modelosurgical oncology  
+                                  -1.22900  
+                     log_monto_reclamado_z  
+                                  -0.95297  
+                      tipo_hospitalPúblico  
+                                   0.01941  
+Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: mortalidad_binaria ~ edad_z + sexo + nombre_categoria_modelo +  
+    log_monto_reclamado_z + tipo_hospital + (1 | nombre_hospital)
+   Data: datos_modelo
+      AIC       BIC    logLik -2*log(L)  df.resid 
+ 79182.45  79437.31 -39568.23  79136.45    479665 
+Random effects:
+ Groups          Name        Std.Dev.
+ nombre_hospital (Intercept) 1.148   
+Number of obs: 479688, groups:  nombre_hospital, 465
+Fixed Effects:
+                               (Intercept)  
+                                  -3.75864  
+                                    edad_z  
+                                   0.30114  
+                              sexoFemenino  
+                                   0.03810  
+         nombre_categoria_modelocardiology  
+                                  -0.29536  
+      nombre_categoria_modelocritical care  
+                                   2.34411  
+   nombre_categoria_modelogastroenterology  
+                                  -0.73447  
+   nombre_categoria_modelogeneral medicine  
+                                  -0.10179  
+    nombre_categoria_modelogeneral surgery  
+                                  -1.33557  
+   nombre_categoria_modelomedical oncology  
+                                  -4.74726  
+         nombre_categoria_modelonephrology  
+                                  -0.93472  
+          nombre_categoria_modeloneurology  
+                                  -0.16372  
+       nombre_categoria_modeloneurosurgery  
+                                   0.74989  
+              nombre_categoria_modeloOther  
+                                  -3.58738  
+nombre_categoria_modelopediatric surgeries  
+                                  -0.38289  
+         nombre_categoria_modelopediatrics  
+                                   0.12946  
+    nombre_categoria_modeloplastic surgery  
+                                   1.34698  
+        nombre_categoria_modelopoly trauma  
+                                  -1.52764  
+        nombre_categoria_modelopulmonology  
+                                   0.97527  
+ nombre_categoria_modeloradiation oncology  
+                                  -2.49927  
+  nombre_categoria_modelosurgical oncology  
+                                  -1.22900  
+                     log_monto_reclamado_z  
+                                  -0.95297  
+                      tipo_hospitalPúblico  
+                                   0.01941  
+               grp     vcov
+1  nombre_hospital 1.183603
+2 nombre_categoria 4.133994
+              grp     vcov
+1 nombre_hospital 1.182985
+# A tibble: 2 × 7
+  modelo         objeto    AIC    BIC varianza_hospital ICC_pct PCV_hospital_pct
+  <chr>          <chr>   <dbl>  <dbl>             <dbl>   <dbl>            <dbl>
+1 Paciente clín… glmm_… 82419. 82475.              1.18    61.8             64.3
+2 Paciente clín… glmm_… 82295. 82649.              1.18    26.4             64.4
+[1] "Paciente clínico (efecto fijo)"
+[1] 82294.78
+[1] 1.182985
+[1] 28.58553

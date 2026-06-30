@@ -1,3 +1,5 @@
+sink("output.txt")
+
 # ==========================================================
 # ANÁLISIS MULTINIVEL DE MORTALIDAD
 # Pacientes atendidos en hospitales de India
@@ -134,7 +136,7 @@ datos <- datos %>%
 # 4. BASE ANALÍTICA INICIAL
 # ==========================================================
 
-datos_modelo <- datos %>%
+datos_modelo_inicial <- datos %>%
   select(
     mortalidad_binaria,
     edad,
@@ -171,7 +173,7 @@ datos_modelo <- datos %>%
 # 5. AGRUPAMIENTO DE CATEGORÍAS CLÍNICAS INESTABLES
 # ==========================================================
 
-resumen_categoria <- datos_modelo %>%
+resumen_categoria <- datos_modelo_inicial %>%
   group_by(nombre_categoria) %>%
   summarise(
     pacientes = n(),
@@ -185,7 +187,7 @@ categorias_inestables <- resumen_categoria %>%
   filter(pacientes < 100 | muertes < 50) %>%
   pull(nombre_categoria)
 
-datos_modelo <- datos_modelo %>%
+datos_modelo <- datos_modelo_inicial %>%
   mutate(
     nombre_categoria_modelo = if_else(
       nombre_categoria %in% categorias_inestables,
@@ -753,13 +755,14 @@ anova(
 # 11.5. COMPARACIÓN DE MODELOS POSTERIORES
 # ==========================================================
 
+# utilizamos datos iniciales, sin filtrado de categorías ni hospitales
 glmm_paciente_clinico_nuevo <- glmer(
   mortalidad_binaria ~
     edad_z +
     sexo +
-    (1 | nombre_categoria_modelo) +
+    (1 | nombre_categoria) +
     (1 | nombre_hospital),
-  data = datos_modelo,
+  data = datos_modelo_inicial,
   family = binomial(),
   control = glmerControl(optimizer = "bobyqa")
 )
@@ -767,12 +770,62 @@ glmm_paciente_clinico_nuevo <- glmer(
 icc_paciente_clinico_nuevo <- calcular_icc_logistico(glmm_paciente_clinico_nuevo)
 
 icc_paciente_clinico_nuevo$varianzas
-icc_paciente_clinico_nuevo$ICC_total_pct
+icc_paciente_clinico_nuevo$ICC_por_nivel
+
+
+glmm_paciente_clinico_otro <- glmer(
+  mortalidad_binaria ~
+    edad_z +
+    sexo +
+    nombre_categoria +
+    (1 | nombre_hospital),
+  data = datos_modelo_inicial,
+  family = binomial(),
+  control = glmerControl(optimizer = "bobyqa")
+)
+
+icc_paciente_clinico_otro <- calcular_icc_logistico(glmm_paciente_clinico_otro)
+
+icc_paciente_clinico_otro$varianzas
+icc_paciente_clinico_otro$ICC_total_pct
 
 anova(
-  glmm_paciente_clinico,
+  glmm_paciente_clinico_otro,
   glmm_paciente_clinico_nuevo
 )
+
+comparacion_modelos_posteriores <- tibble(
+  modelo = c(
+    "Paciente clínico (efecto aleatorio)",
+    "Paciente clínico (efecto fijo)"
+  ),
+  objeto = c(
+    "glmm_paciente_clinico_nuevo",
+    "glmm_paciente_clinico_otro"
+  ),
+  AIC = c(
+    AIC(glmm_paciente_clinico_nuevo),
+    AIC(glmm_paciente_clinico_otro)
+  ),
+  BIC = c(
+    BIC(glmm_paciente_clinico_nuevo),
+    BIC(glmm_paciente_clinico_otro)
+  ),
+  varianza_hospital = c(
+    icc_paciente_clinico_nuevo$varianzas$vcov[1],
+    icc_paciente_clinico_otro$varianzas$vcov[1]
+  ),
+  ICC_pct = c(
+    icc_paciente_clinico_nuevo$ICC_total_pct,
+    icc_paciente_clinico_otro$ICC_total_pct
+  )
+) %>%
+  mutate(
+    PCV_hospital_pct = 100 *
+      (var_hosp_nulo - varianza_hospital) / var_hosp_nulo
+  )
+
+comparacion_modelos_posteriores
 
 # ==========================================================
 # INTERPRETACIÓN DE LOS MODELOS MULTINIVEL EXPLICATIVOS
@@ -1072,6 +1125,8 @@ roc_modelo_final <- roc(
 auc(roc_modelo_final)
 plot(roc_modelo_final)
 
+sink("log.txt", split = TRUE)
+
 # ==========================================================
 # INTERPRETACIÓN DEL DESEMPEÑO DISCRIMINATIVO
 # ==========================================================
@@ -1104,3 +1159,6 @@ plot(roc_modelo_final)
 # características individuales de los pacientes, persisten diferencias
 # sistemáticas entre hospitales que justifican futuras investigaciones
 # sobre factores organizacionales y de calidad asistencial.
+
+
+
