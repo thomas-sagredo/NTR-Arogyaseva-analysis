@@ -7,6 +7,7 @@ import pandas as pd
 from src.config.constants import (
     RAW_DATA_DIR,
     CLEAN_DATA_DIR,
+    PROCESSED_DATA_DIR,
     PANDAS_DISPLAY_OPTIONS,
 )
 
@@ -54,11 +55,16 @@ def load_data(
     """
     Load the dataset from the specified data directory.
     """
-    if stage.lower().strip() not in ["raw", "clean"]:
-        raise ValueError(f"Invalid stage: {stage}. Must be 'raw' or 'clean'.")
+    if stage.lower().strip() not in ["raw", "clean", "processed"]:
+        raise ValueError(f"Invalid stage: {stage}. Must be 'raw', 'clean', or 'processed'.")
     
     if stage.lower().strip() == "clean":
         path = Path(CLEAN_DATA_DIR) / "ntrarogyaseva.parquet"
+
+        return pd.read_parquet(path)
+    
+    elif stage.lower().strip() == "processed":
+        path = Path(PROCESSED_DATA_DIR) / "ntrarogyaseva.parquet"
 
         return pd.read_parquet(path)
     

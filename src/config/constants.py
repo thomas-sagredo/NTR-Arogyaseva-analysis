@@ -3,6 +3,7 @@
 # Directory paths for data
 RAW_DATA_DIR = "data/raw"
 CLEAN_DATA_DIR = "data/clean"
+PROCESSED_DATA_DIR = "data/processed"
 
 # Display options for pandas DataFrames to ensure consistent formatting across the pipeline.
 PANDAS_DISPLAY_OPTIONS = {
