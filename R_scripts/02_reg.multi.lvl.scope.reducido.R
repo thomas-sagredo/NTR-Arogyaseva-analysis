@@ -409,3 +409,50 @@ anova(
   glmm_paciente_principal,
   glmm_contextual_hospital
 )
+
+
+# ==========================================================
+# 12. COMPARACIÓN DE MODELOS EN TEST
+# ==========================================================
+
+set.seed(123)  # para reproducibilidad
+n <- nrow(datos_modelo)
+
+# índices de entrenamiento (80%)
+train_index <- sample(1:n, size = 0.8 * n)
+
+# crear los conjuntos
+train <- datos_modelo[train_index, ]
+test  <- datos_modelo[-train_index, ]
+
+
+glmm_paciente_principal <- glmer(
+  mortality ~
+    age_z +
+    sex +
+    category_name +
+    log_claim_amount_z +
+    (1 | hosp_name),
+  data = train,
+  family = binomial(),
+  control = glmerControl(
+    optimizer = "bobyqa",
+    optCtrl = list(maxfun = 2e5)
+  )
+)
+
+y_true <- test$mortality
+y_pred_prob <- predict(glmm_paciente_principal, newdata = test, type = "response")
+
+roc_curve <- roc(y_true, y_pred_prob)
+
+roc_auc <- auc(roc_curve)
+
+roc_auc
+
+confusion_matrix <- table(
+  Actual = y_true,
+  Predicted = ifelse(y_pred_prob > 0.5, 1, 0)
+)
+
+confusion_matrix
